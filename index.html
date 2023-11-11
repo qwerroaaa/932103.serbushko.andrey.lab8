@@ -1,14 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles.css">
+  <title>Frontend task№8</title>
 </head>
 <body>
-    <div></div>
-    
-    <script src="script.js"></script>
+
+<div id="container" class="container">
+  <div>
+    <input type="text" name="name[]" placeholder="Название" required>
+    <input type="number" name="number[]" placeholder="Число" required>
+    <button onclick="moveUp(this)">↑</button>
+    <button onclick="moveDown(this)">↓</button>
+    <button onclick="removeInput(this)">✖</button>
+  </div>
+</div>
+
+<button onclick="addInput()">Добавить элемент</button>
+<button onclick="saveData()">Сохранить</button>
+
+<div id="output"></div>
 </body>
+<script src="script.js"></script>
 </html>
