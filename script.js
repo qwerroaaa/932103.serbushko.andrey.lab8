@@ -1,43 +1,59 @@
-function addInput() {
-    var container = document.getElementById('container');
-    var div = document.createElement('div');
-    div.innerHTML = '<input type="text" name="name[]" placeholder="Название" required> <input type="number" name="number[]" placeholder="Число" required> <button onclick="moveUp(this)">↑</button> <button onclick="moveDown(this)">↓</button> <button onclick="removeInput(this)">✖</button>';
-    container.appendChild(div);
-  }
+const itemsContainer = document.querySelector('.objects__items');
+const savedContainer = document.querySelector('.objects__saved');
+const addBtn = document.querySelector('.objects__add');
+const saveBtn = document.querySelector('.objects__save');
 
-  function saveData() {
-    var elements = document.querySelectorAll('[name^="name"]');
-    var output = {};
+addBtn.addEventListener('click', () => {
+    const newObject = document.createElement('div');
 
-    elements.forEach(function(element, index) {
-      var name = element.value;
-      var number = document.getElementsByName('number[]')[index].value;
-      output[name] = number;
+    newObject.classList.add('objects__item');
+    newObject.innerHTML = `
+        <input type="text" class="objects__input">
+        <input type="text" class="objects__input">
+        <button type="button" class="objects__btn objects__up-btn">&uarr;</button>
+        <button type="button" class="objects__btn objects__down-btn">&darr;</button>
+        <button type="button" class="objects__btn objects__close-btn">&times;</button>
+    `;
+    newObject.querySelector('.objects__up-btn').addEventListener('click', moveObjectUp);
+    newObject.querySelector('.objects__down-btn').addEventListener('click', moveObjectDown);
+    newObject.querySelector('.objects__close-btn').addEventListener('click', removeObject);
+
+    itemsContainer.append(newObject);
+});
+
+saveBtn.addEventListener('click', () => {
+    const objectItems = document.querySelectorAll('.objects__item');
+    let savedObjects = '{';
+
+    objectItems.forEach((item) => {
+        const firstInputValue = item.querySelector('input:nth-child(1)').value;
+        const secondInputValue = item.querySelector('input:nth-child(2)').value;
+
+        savedObjects += `"${firstInputValue}":"${secondInputValue}",`;
     });
 
-    var outputContainer = document.getElementById('output');
-    outputContainer.textContent = JSON.stringify(output, null, 2);
-  }
+    savedObjects = savedObjects.slice(0, savedObjects.length - 1);
+    savedObjects += '}';
 
-  function moveUp(button) {
-    var currentDiv = button.parentNode;
-    var previousDiv = currentDiv.previousElementSibling;
+    savedContainer.textContent = savedObjects;
+});
 
-    if (previousDiv) {
-      currentDiv.parentNode.insertBefore(currentDiv, previousDiv);
-    }
-  }
+const moveObjectUp = ($event) => {
+    const currentObj = $event.target.closest('.objects__item');
+    const prevObj = currentObj.previousElementSibling;
+    prevObj?.before(currentObj);
+};
 
-  function moveDown(button) {
-    var currentDiv = button.parentNode;
-    var nextDiv = currentDiv.nextElementSibling;
+const moveObjectDown = ($event) => {
+    const currentObj = $event.target.closest('.objects__item');
+    const nextObj = currentObj.nextElementSibling;
+    nextObj?.after(currentObj);
+};
 
-    if (nextDiv) {
-      currentDiv.parentNode.insertBefore(nextDiv, currentDiv);
-    }
-  }
+const removeObject = ($event) => {
+    $event.target.closest('.objects__item').remove();
+};
 
-  function removeInput(button) {
-    var currentDiv = button.parentNode;
-    currentDiv.parentNode.removeChild(currentDiv);
-  }
+document.querySelector('.objects__up-btn').addEventListener('click', moveObjectUp);
+document.querySelector('.objects__down-btn').addEventListener('click', moveObjectDown);
+document.querySelector('.objects__close-btn').addEventListener('click', removeObject);
